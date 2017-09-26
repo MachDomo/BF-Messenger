@@ -18,13 +18,22 @@ export default class App extends React.Component {
     this.updateMessages = this.updateMessages.bind(this);
     this.handleInput = this.handleInput.bind(this);
     this.scrollToBottom = this.scrollToBottom.bind(this);
+    this.getMessages = this.getMessages.bind(this);
+
   }
 
   componentDidMount() {
     console.log('component mounted');
-    getMessages(this.updateMessages);
+
+    this.getMessages();
+    setInterval(() => {
+      this.getMessages()
+    }, 5000);
   }
 
+  getMessages() {
+    getMessages(this.updateMessages);
+  }
 
 
   updateMessages(data) {
@@ -41,9 +50,7 @@ export default class App extends React.Component {
         message: e.target.value
       };
       console.log('message', message);
-      postMessages(message, ()=> {
-        getMessages(this.updateMessages);
-      });
+      postMessages(message, this.getMessages);
       e.target.value = '';
     }
   }
