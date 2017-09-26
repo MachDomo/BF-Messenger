@@ -8,11 +8,11 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      messages: [{username: 'Dom', message: 'Hello World'}],
+      messages: [],
       liveChat: '',
       chatInput: ''
     };
-
+    this.updateMessages = this.updateMessages.bind(this);
   }
 
   componentDidMount() {
@@ -21,7 +21,8 @@ export default class App extends React.Component {
   }
 
   updateMessages(data) {
-    this.setState({messages: JSON.parse(data)});
+    console.log('data in update', data);
+    this.setState({messages: data});
   }
 
   handleInput(e) {

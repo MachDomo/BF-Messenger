@@ -12,10 +12,11 @@ let storage = [
   {username: '1337 h4x0r', message: 'All your base are belong to us'}
 ];
 
+
+
 let app = express();
 const compiler = webpack(webpackConfig);
 
-app.use(express.static(path.join(__dirname, 'client')));
 
 app.use(webpackMiddleware(compiler, {
   hot: true,
@@ -24,15 +25,24 @@ app.use(webpackMiddleware(compiler, {
 }));
 
 app.use(webpackHotMiddleware(compiler));
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+
+  next();
+});
+app.use(express.static(path.join(__dirname, 'client')));
 
 app.get('/messages', (req, res) => {
   console.log('sending data');
+  // res.writeHead(200, {'Content-Type': 'JSON'});
   res.send(JSON.stringify(storage));
 })
 
 
 
 app.get('/*', (req, res) => {
+
   res.sendFile(path.join(__dirname, 'client/index.html'));
 });
 

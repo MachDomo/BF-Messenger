@@ -3,7 +3,7 @@ import ChatMessage from './ChatMessage';
 
 const Chats = (props) => (
   <div className="chats">
-    {props.chats.map((chat, i) => <ChatMessage key={'chat${i}'} chat={chat} />)}
+    {props.chats.map((chat, i) => <ChatMessage key={`chat${i}`} chat={chat} />)}
   </div>
 );
 
