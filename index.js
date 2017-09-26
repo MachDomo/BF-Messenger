@@ -45,10 +45,10 @@ app.get('/messages', (req, res) => {
 });
 
 app.post('/messages', (req, res) => {
-  console.log('message posted!');
+  console.log('message received', req.body);
   console.log(req.body);
   storage.push(req.body);
-  res.end(req.body);
+  res.send(JSON.stringify(storage));
 });
 
 

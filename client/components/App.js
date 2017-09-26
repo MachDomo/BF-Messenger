@@ -1,6 +1,7 @@
 import React from 'react';
 import Chats from './Chats.js';
 import getMessages from '../utils/getMessages.js';
+import postMessages from '../utils/postMessages.js';
 
 
 
@@ -10,9 +11,11 @@ export default class App extends React.Component {
     this.state = {
       messages: [],
       liveChat: '',
-      chatInput: ''
+      chatInput: '',
+      currentUser: 'Dom'
     };
     this.updateMessages = this.updateMessages.bind(this);
+    this.handleInput = this.handleInput.bind(this);
   }
 
   componentDidMount() {
@@ -27,8 +30,15 @@ export default class App extends React.Component {
 
   handleInput(e) {
     if(e.key === 'Enter') {
-      console.log(e.target.value);
-
+      console.log(e.target.value, this);
+      let message = {
+        username: this.state.currentUser,
+        message: e.target.value
+      };
+      console.log('message', message);
+      postMessages(message, ()=> {
+        getMessages(this.updateMessages);
+      });
       e.target.value = '';
     }
   }
