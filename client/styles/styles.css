@@ -7,8 +7,9 @@ h1 {
 }
 
 .chats {
-  height: 70%;
+
   display: block;
+
 }
 
 .form-group {
@@ -18,4 +19,9 @@ h1 {
 textarea {
   width: 100%;
   radius: 5px;
+}
+
+.scroll {
+  height: 600px;
+  overflow: scroll;
 }

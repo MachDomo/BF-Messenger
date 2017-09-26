@@ -12,10 +12,12 @@ export default class App extends React.Component {
       messages: [],
       liveChat: '',
       chatInput: '',
-      currentUser: 'Dom'
+      currentUser: 'Dom',
+
     };
     this.updateMessages = this.updateMessages.bind(this);
     this.handleInput = this.handleInput.bind(this);
+    this.scrollToBottom = this.scrollToBottom.bind(this);
   }
 
   componentDidMount() {
@@ -23,9 +25,12 @@ export default class App extends React.Component {
     getMessages(this.updateMessages);
   }
 
+
+
   updateMessages(data) {
     console.log('data in update', data);
     this.setState({messages: data});
+    this.scrollToBottom();
   }
 
   handleInput(e) {
@@ -42,6 +47,12 @@ export default class App extends React.Component {
       e.target.value = '';
     }
   }
+
+  scrollToBottom() {
+
+    this.bottom.scrollIntoView({behavior: "smooth"});
+  }
+
   render() {
     return (
       <div className="container-fluid">
@@ -51,7 +62,10 @@ export default class App extends React.Component {
           </div>
           <div className="col-md-6">
             <h1>Chats</h1>
-            <Chats chats={this.state.messages} />
+            <div className="scroll">
+              <Chats chats={this.state.messages} />
+              <div ref={(el) => { this.bottom = el; }} />
+            </div>
             <div className="form-group">
               <label>Send a Message!</label>
               <textarea className="form-control" rows="2" type="text" onKeyUp={this.handleInput}></textarea>
