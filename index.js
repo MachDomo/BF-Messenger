@@ -1,5 +1,6 @@
 import express from 'express';
 import path from 'path';
+import bodyParser from 'body-parser';
 
 import webpack from 'webpack';
 import webpackMiddleware from 'webpack-dev-middleware';
@@ -15,30 +16,40 @@ let storage = [
 
 
 let app = express();
+
+// Webpack Middleware
 const compiler = webpack(webpackConfig);
-
-
 app.use(webpackMiddleware(compiler, {
   hot: true,
   publicPath: webpackConfig.output.publicPath,
   noInfo: true
 }));
-
 app.use(webpackHotMiddleware(compiler));
+
+// Headers
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-
   next();
 });
+
+// Body parser
+app.use(bodyParser.json());
+
+// Static File Server
 app.use(express.static(path.join(__dirname, 'client')));
 
+// Router
 app.get('/messages', (req, res) => {
-  console.log('sending data');
-  // res.writeHead(200, {'Content-Type': 'JSON'});
   res.send(JSON.stringify(storage));
-})
+});
 
+app.post('/messages', (req, res) => {
+  console.log('message posted!');
+  console.log(req.body);
+  storage.push(req.body);
+  res.end(req.body);
+});
 
 
 app.get('/*', (req, res) => {
