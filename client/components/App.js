@@ -38,8 +38,10 @@ export default class App extends React.Component {
 
   updateMessages(data) {
     console.log('data in update', data);
-    this.setState({messages: data});
-    this.scrollToBottom();
+    if (this.state.messages.length !== data.length) {
+      this.setState({messages: data});
+      this.scrollToBottom();
+    }
   }
 
   handleInput(e) {
