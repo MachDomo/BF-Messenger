@@ -1,14 +1,22 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {messages: [{username: 'Dom', message: 'Hello World'}]};
   }
   render ()  {
     return (
-      <h1>Hello from react</h1>
+      <div>
+        <div className="row"></div>
+
+
+      <h1>Hello from react {this.state.messages[0].username}</h1>
+      </div>
+
     );
   }
 
 }
+// It should have a chat Component
