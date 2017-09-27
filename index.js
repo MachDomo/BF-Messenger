@@ -57,34 +57,6 @@ passport.use(new Strategy({
   }, function(accessToken, refreshToken, profile, done) {
 
     process.nextTick(function () {
-      // let username = profile.displayName;
-      //
-      // let email = profile.email;
-      //
-      // console.log(email);
-      //
-      // User.findOne({username: username, email: email})
-      // .exec((err, found) => {
-      //   if (err) {
-      //     done(err);
-      //   }
-      //
-      //   if (!found) {
-      //     let newUser = new User({
-      //       username: username,
-      //       email: email,
-      //     })
-      //     newUser.save();
-      //     console.log('user saved!');
-      //   } else {
-      //     console.log('user exists!');
-      //     console.log('found', found);
-      //   }
-      //
-      //
-      //   done(null, found, found);
-      //
-      // });
       console.log('next tick');
       done(null, {
         accessToken: accessToken,
@@ -172,7 +144,40 @@ app.post('/messages', checkAuth, (req, res) => {
   res.end();
 });
 
+app.post('/login', (req, res) => {
+  let username = req.body.username;
+  let password = req.body.password;
 
+  User.findOne({username: username, password: password}).exec((err, found) => {
+    if (err) {
+      console.log(err);
+    }
+    if (found) {
+      res.send(JSON.stringify({username: found.username}));
+    } else {
+      res.send({"InvalidSubmission": true});
+    }
+  })
+});
+
+app.post('/signup', (req, res) => {
+  let username = req.body.username;
+  let password = req.body.password;
+  console.log(username, password);
+
+  User.findOne({username: username, password: password}).exec((err, found) => {
+    if (err) {
+      throw err;
+    }
+    if (found) {
+      res.send({'InvalidSubmission': true});
+    } else {
+      let newUser = new User({username: username, password: password});
+      newUser.save();
+      res.send(JSON.stringify({username: newUser.username}));
+    }
+  })
+});
 
 
 app.listen(1337, () => console.log('Running on localhost:1337'));

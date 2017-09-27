@@ -3,7 +3,7 @@
 
 h1 {
   text-align: center;
-  color: blue;
+  color: #3b5998;
 }
 
 .chats {
@@ -24,4 +24,25 @@ textarea {
 .scroll {
   height: 600px;
   overflow: scroll;
+}
+
+.login {
+  background-color: #f7f7f7;
+  height: 730px;
+}
+
+.navbar {
+  background-color: #3b5998;
+}
+
+.self {
+  text-align: right;
+  padding-right: 20px;
+  border-radius: 5px;
+  border-color: #8b9dc3;
+  border-style: solid;
+  background-color: #0084ff;
+  width: auto;
+  overflow: auto;
+  font-color: #FFF;
 }
