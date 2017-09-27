@@ -54,7 +54,7 @@ export default class App extends React.Component {
   }
 
 
- 
+
   handleInput(e) {
     if(e.key === 'Enter') {
       console.log(e.target.value, this);
@@ -111,12 +111,15 @@ export default class App extends React.Component {
       <div>
         <div className="container">
         <div className="navbar">
+          <h3 className="title">Home</h3>
         </div>
           <div className="row">
             <div className="col-md-3">
+              <div className="logo">
+              </div>
             </div>
             <div className="col-md-6">
-              <h1>React Chat</h1>
+              <h1>Messenger</h1>
               <div className="scroll">
                 <Chats chats={this.state.messages} logged={this.state.isLoggedIn} user={this.state.currentUser} />
                 <div ref={(el) => { this.bottom = el; }} />
