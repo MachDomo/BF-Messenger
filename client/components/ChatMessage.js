@@ -3,7 +3,8 @@ import React from 'react';
 const ChatMessage = (props) => {
   if (props.logged && props.user === props.chat.username) {
     return (
-      <div className="chat">
+      <div>
+        <div className="space"></div>
         <h3 className="self">{props.chat.message}</h3>
       </div>
     );
