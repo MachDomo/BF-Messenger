@@ -28,7 +28,9 @@ textarea {
 
 .login {
   background-color: #f7f7f7;
+  border-radius: 10px;
   height: 730px;
+  padding: 5px 0px 0px 40px;
 }
 
 .navbar {
@@ -40,8 +42,8 @@ textarea {
   right: 20px;
   text-align: right;
   margin: 5px;
-  padding: 10px;
-  padding-right: 20px;
+  padding: 10px 15px;
+
   margin-left: auto;
   background-color: #8b9dc3;
   color: #ffffff;
@@ -54,11 +56,12 @@ textarea {
   width: 65%;
 }
 .chat {
-
+  left: 20px;
   margin: 5px;
-  padding: 10px;
+  padding: 5px 15px;
+
   white-space: pre-wrap;
-  max-width: 85%;
+
   width: fit-content;
   background-color: #f7f7f7;
   border-radius: 30px;
