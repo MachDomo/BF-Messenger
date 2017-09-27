@@ -1,6 +1,16 @@
 import express from 'express';
 import path from 'path';
 import bodyParser from 'body-parser';
+import passport from 'passport';
+import session from 'express-session';
+import { Strategy } from 'passport-facebook';
+import fbAuth from './key/facebookapp.js';
+import mongoose from 'mongoose';
+import db from './db/config.js';
+import User from './db/models/user.js';
+import Message from './db/models/message.js';
+
+
 
 import webpack from 'webpack';
 import webpackMiddleware from 'webpack-dev-middleware';
@@ -13,7 +23,81 @@ let storage = [
   {username: '1337 h4x0r', message: 'All your base are belong to us'}
 ];
 
+function checkAuth(req, res, next) {
+  // if(req.isAuthenticated()) {
+  //   console.log('Authenticated!');
+  //   next();
+  // } else {
+  //   console.log('Authentication failed!');
+  //   console.log(req.authInfo);
+  //   res.redirect('/auth/facebook');
+  //   res.end();
+  // }
+  next();
+};
 
+
+passport.serializeUser(function(user, done) {
+  console.log('serialized!');
+  done(null, user);
+});
+
+passport.deserializeUser(function(obj, done) {
+
+  console.log('deserialized!');
+  done(null, obj);
+});
+
+passport.use(new Strategy({
+    clientID: fbAuth.FACEBOOK_APP_ID,
+    clientSecret: fbAuth.FACEBOOK_APP_SECRET,
+    callbackURL: 'http://localhost:1337/auth/facebook/callback',
+    enableProof: false,
+    profileFields: ['id', 'displayName', 'photos']
+  }, function(accessToken, refreshToken, profile, done) {
+
+    process.nextTick(function () {
+      // let username = profile.displayName;
+      //
+      // let email = profile.email;
+      //
+      // console.log(email);
+      //
+      // User.findOne({username: username, email: email})
+      // .exec((err, found) => {
+      //   if (err) {
+      //     done(err);
+      //   }
+      //
+      //   if (!found) {
+      //     let newUser = new User({
+      //       username: username,
+      //       email: email,
+      //     })
+      //     newUser.save();
+      //     console.log('user saved!');
+      //   } else {
+      //     console.log('user exists!');
+      //     console.log('found', found);
+      //   }
+      //
+      //
+      //   done(null, found, found);
+      //
+      // });
+      console.log('next tick');
+      done(null, {
+        accessToken: accessToken,
+        profile: profile
+      });
+    });
+
+
+
+
+
+
+}));
 
 let app = express();
 
@@ -32,30 +116,63 @@ app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
+// Static File Server
+app.use(express.static((__dirname + '/client')));
+
+app.use(session({
+  secret: fbAuth.FACEBOOK_APP_SECRET,
+  resave: false,
+  saveUninitialized: true
+}))
+// Passport
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 // Body parser
 app.use(bodyParser.json());
 
-// Static File Server
-app.use(express.static(path.join(__dirname, 'client')));
-
 // Router
-app.get('/messages', (req, res) => {
-  res.send(JSON.stringify(storage));
+app.get('/', (req, res) => {
+  if (req.isAuthenticated()) {
+    res.sendFile(path.join(__dirname, 'client/index.html'));
+  } else {
+    res.redirect('/auth/facebook');
+  }
+});
+// Authentication Routes
+app.get('/auth/facebook', passport.authenticate('facebook'));
+
+app.get('/auth/facebook/callback',
+
+passport.authenticate('facebook', {
+  failureRedirect: '/auth/facebook'
+}),
+function(req, res) {
+  console.log('authenticated!');
+  res.redirect('/');
+}
+);
+
+app.get('/messages', checkAuth, (req, res) => {
+  Message.find().exec((err, messages) => {
+    if (err) {
+      return err;
+    }
+    res.send(JSON.stringify(messages));
+  })
+  // res.send(JSON.stringify(storage));
 });
 
-app.post('/messages', (req, res) => {
+app.post('/messages', checkAuth, (req, res) => {
   console.log('message received', req.body);
   console.log(req.body);
   storage.push(req.body);
-  res.send(JSON.stringify(storage));
+  new Message(req.body).save();
+  res.end();
 });
 
 
-app.get('/*', (req, res) => {
-
-  res.sendFile(path.join(__dirname, 'client/index.html'));
-});
 
 
 app.listen(1337, () => console.log('Running on localhost:1337'));

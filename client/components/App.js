@@ -13,8 +13,8 @@ export default class App extends React.Component {
       liveChat: '',
       chatInput: '',
       currentUser: 'Dom',
-
     };
+
     this.updateMessages = this.updateMessages.bind(this);
     this.handleInput = this.handleInput.bind(this);
     this.scrollToBottom = this.scrollToBottom.bind(this);
@@ -64,24 +64,24 @@ export default class App extends React.Component {
 
   render() {
     return (
-      <div className="container-fluid">
-        <div className="row">
-          <div className="col-md-3">
-            <h1>Connections</h1>
-          </div>
-          <div className="col-md-6">
-            <h1>Chats</h1>
-            <div className="scroll">
-              <Chats chats={this.state.messages} />
-              <div ref={(el) => { this.bottom = el; }} />
+      <div>
+        <div className="container-fluid">
+          <div className="row">
+            <div className="col-md-3">
             </div>
-            <div className="form-group">
-              <label>Send a Message!</label>
-              <textarea className="form-control" rows="2" type="text" onKeyUp={this.handleInput}></textarea>
+            <div className="col-md-6">
+              <h1>React Chat</h1>
+              <div className="scroll">
+                <Chats chats={this.state.messages} />
+                <div ref={(el) => { this.bottom = el; }} />
+              </div>
+              <div className="form-group">
+                <label>Send a Message!</label>
+                <textarea className="form-control" rows="2" type="text" onKeyUp={this.handleInput}></textarea>
+              </div>
             </div>
-          </div>
-          <div className="col-md-3">
-            <h1>User Details</h1>
+            <div className="col-md-3">
+            </div>
           </div>
         </div>
       </div>
@@ -89,4 +89,3 @@ export default class App extends React.Component {
   }
 
 }
-// It should have a chat Component
